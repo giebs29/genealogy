@@ -41,7 +41,7 @@ def add_person(first,middle,last,gender,family,bdate,loc_id):
 def list_married():
     sql_str = """SELECT first, middle, last
         FROM persons, relations
-        WHERE relations.type = 3
+        WHERE relations.type = 'M'
         AND persons.id IN (relations.person_1, relations.person_2)"""
     married_list = execute_sql(db_path,sql_str)
     for person in married_list:
@@ -53,7 +53,7 @@ def list_unmarried():
         WHERE persons.id NOT IN(
         SELECT persons.id
         FROM persons, relations
-        WHERE relations.type = 3
+        WHERE relations.type = 'M'
         AND persons.id IN (relations.person_1, relations.person_2))"""
     unmarried_list = execute_sql(db_path,sql_str)
     for person in unmarried_list:
@@ -66,7 +66,7 @@ def list_orphans():
         WHERE persons.id NOT IN (
         SELECT DISTINCT persons.id
         FROM persons, relations
-        WHERE relations.type = 1
+        WHERE relations.type = 'PC'
         AND ((persons.id = relations.person_1
         AND relations.person_1_role !=1) OR (persons.id = relations.person_2
         AND relations.person_2_role !=1)))"""
