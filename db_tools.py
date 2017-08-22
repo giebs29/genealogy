@@ -16,14 +16,14 @@ def execute_sql(db,sql_str):
         return cur.fetchall()
 
 def add_child(child_id,mother_id,father_id):
-    sql_strs = ["INSERT INTO relations(type,person_1,person_2,person_1_role,person_2_role) VALUES(1,{0},{1},2,1)".format(child_id,mother_id),
-        "INSERT INTO relations(type,person_1,person_2,person_1_role,person_2_role) VALUES(1,{0},{1},2,1)".format(child_id,father_id)]
+    sql_strs = ["INSERT INTO relations(type,person_1,person_2,person_1_role,person_2_role) VALUES('PC',{0},{1},'C','P')".format(child_id,mother_id),
+        "INSERT INTO relations(type,person_1,person_2,person_1_role,person_2_role) VALUES('PC',{0},{1},'C',P)".format(child_id,father_id)]
 
     for sql_str in sql_strs:
         execute_sql(db_path,sql_str)
 
 def add_marriage(husband_id,wife_id,date,loc_id):
-    sql_str = "INSERT INTO relations(type,person_1,person_2,person_1_role,person_2_role,start,location) VALUES(3,{0},{1},3,4,{2},{3})".format(husband_id,wife_id,date,loc_id)
+    sql_str = "INSERT INTO relations(type,person_1,person_2,person_1_role,person_2_role,start,location) VALUES(M,{0},{1},3,4,{2},{3})".format(husband_id,wife_id,date,loc_id)
     execute_sql(db_path,sql_str)
 
 def add_person(first,middle,last,gender,family,bdate,loc_id):
@@ -68,8 +68,8 @@ def list_orphans():
         FROM persons, relations
         WHERE relations.type = 'PC'
         AND ((persons.id = relations.person_1
-        AND relations.person_1_role !=1) OR (persons.id = relations.person_2
-        AND relations.person_2_role !=1)))"""
+        AND relations.person_1_role !='P') OR (persons.id = relations.person_2
+        AND relations.person_2_role !='P')))"""
     orphans = execute_sql(db_path,sql_str)
     for orphan in orphans:
         print orphan['first'],orphan['middle'],orphan['last']
@@ -80,10 +80,10 @@ def parents_of_children():
         WHERE persons.id IN (
         SELECT DISTINCT persons.id
         FROM persons, relations
-        WHERE relations.type = 1
+        WHERE relations.type = 'PC'
         AND ((persons.id = relations.person_1
-        AND relations.person_1_role =1) OR (persons.id = relations.person_2
-        AND relations.person_2_role =1)))"""
+        AND relations.person_1_role ='P') OR (persons.id = relations.person_2
+        AND relations.person_2_role ='P')))"""
     parents = execute_sql(db_path,sql_str)
     for parent in parents:
         print parent['first'],parent['middle'],parent['last']
@@ -91,10 +91,10 @@ def parents_of_children():
 if __name__ == '__main__':
     db_path = '/home/sam/Documents/MyRepos/genealogy/genealogy.sqlite'
 
-    # add_child(39,5,6)
-    # list_orphans()
+    add_child(39,5,6)
+    list_orphans()
     # add_marriage(15,40,'2016-05-27',33)
-    list_married()
+    # list_married()
     # list_unmarried()
     # parents_of_children()
 
