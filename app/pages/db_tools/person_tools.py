@@ -10,12 +10,12 @@ def add_person(first,middle,last,gender,family):
     if person_exists(first,middle,last,gender,family):
         return False
     else:
-        sql_str = 'INSERT INTO persons(first,middle,last,gender,family) VALUES(\'{0}\',\'{1}\',\'{2}\',\'{3}\',{4})'.format(first,last,middle,gender,family)
+        sql_str = 'INSERT INTO persons(first,middle,last,gender,family) VALUES(\'{0}\',\'{1}\',\'{2}\',\'{3}\',{4})'.format(first,middle,last,gender,family)
         db.execute_sql(sql_str)
         return True
 
 def person_exists(first,middle,last,gender,family):
-    sql_str = 'SELECT * FROM persons WHERE first = \'{0}\'AND middle = \'{1}\'AND last = \'{2}\'AND gender = \'{3}\'AND family = \'{4}\''.format(first,last,middle,gender,family)
+    sql_str = 'SELECT * FROM persons WHERE first = \'{0}\'AND middle = \'{1}\'AND last = \'{2}\'AND gender = \'{3}\'AND family = {4}'.format(first,middle,last,gender,family)
     exists = db.execute_sql(sql_str)
     if exists:
         return True
@@ -23,7 +23,7 @@ def person_exists(first,middle,last,gender,family):
         return False
 
 def person_search(first=None,middle=None,last=None,gender=None,family=None):
-    sql_str = 'SELECT * FROM persons WHERE first = \'{0}\'OR middle = \'{1}\'OR last = \'{2}\'OR gender = \'{3}\'OR family = \'{4}\''.format(first,last,middle,gender,family)
+    sql_str = 'SELECT * FROM persons WHERE first = \'{0}\'AND middle = \'{1}\'AND last = \'{2}\'AND gender = \'{3}\'AND family = {4}'.format(first,middle,last,gender,family)
     results = db.execute_sql(sql_str)
     return results
 
@@ -35,3 +35,13 @@ def list_full_name(person_id):
     else:
         name = '{0} {1}'.format(results['first'],results['last'])
     return name
+
+def list_males():
+    sql_str = 'SELECT * FROM persons WHERE gender = \'M\''
+    results = db.execute_sql(sql_str)
+    return results
+
+def list_females():
+    sql_str = 'SELECT * FROM persons WHERE gender = \'F\''
+    results = db.execute_sql(sql_str)
+    return results

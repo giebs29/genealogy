@@ -11,7 +11,7 @@ def root_menu():
     # Let users know what they can do.
     print("[1] Add person")
     print("[2] List orphans")
-    print("[q] Quit")
+    print("[Q] Quit")
 
     return raw_input("What would you like to do? ")
 
@@ -29,7 +29,7 @@ while choice != 'q':
         gui_add_person.add_person()
     elif choice == '2':
         list_orphans()
-    elif choice == 'q':
+    elif choice.upper() == 'Q':
         os.system('clear')
     else:
         print("\nI didn't understand that choice.\n")
