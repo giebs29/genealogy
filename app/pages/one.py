@@ -63,8 +63,9 @@ class PersonPage():
         family_label.grid(row=5, column=0, sticky=E)
 
         self.family_list = ttk.Combobox(self.page)
-        families = family_tools.list_families()
-        self.family_list['values'] = [i['name'] for i in families]
+        self.families = [[i['name'],i['id']] for i in family_tools.list_families()]
+        self.families.sort(key=lambda i: i[0])
+        self.family_list['values'] = [i[0] for i in self.families]
         self.family_list.grid(row=5,column=1,sticky=W,columnspan=4)
 
         # Birth
@@ -77,10 +78,10 @@ class PersonPage():
         self.birth_entry.grid(row=6,column=1)
 
         locations_dict = location_tools.list_locations()
-        locations = self.build_location_list(locations_dict)
+        self.locations = self.build_location_list(locations_dict)
 
         self.birth_loc = ttk.Combobox(self.page)
-        self.birth_loc['values'] = locations
+        self.birth_loc['values'] = [i[0] for i in self.locations]
         self.birth_loc['width'] = 50
         self.birth_loc.grid(row=6,column=2,columnspan=4)
 
@@ -94,7 +95,7 @@ class PersonPage():
         self.death_entry.grid(row=7,column=1)
 
         self.death_loc = ttk.Combobox(self.page)
-        self.death_loc['values'] = locations
+        self.death_loc['values'] = [i[0] for i in self.locations]
         self.death_loc['width'] = 50
         self.death_loc.grid(row=7,column=2,columnspan=4)
 
@@ -126,7 +127,8 @@ class PersonPage():
                     else:
                         temp_str += loc[key]
 
-            locations.append(temp_str)
+            locations.append([temp_str, loc['id']])
+        locations.sort(key=lambda loc: loc[0])
         return locations
 
 
@@ -143,11 +145,11 @@ class PersonPage():
         middle = self.middle_entry.get()
         last = self.last_entry.get()
         gender = self.gender.get()
-        family = self.family_list.current()+1
+        family = self.families[self.family_list.current()][1]
         birth = self.birth_entry.get()
-        birth_loc = self.birth_loc.current()+1
+        birth_loc = self.locations[self.birth_loc.current()][1]
         death =self.death_entry.get()
-        death_loc = self.death_loc.current()+1
+        death_loc = self.locations[self.death_loc.current()][1]
 
         if first and last and gender and family > 0:
             if not person_tools.person_exists(first,middle,last,gender,family):

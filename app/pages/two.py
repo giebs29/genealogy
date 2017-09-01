@@ -25,11 +25,11 @@ class ChildPage():
         child_label['text'] = 'Child'
         child_label.grid(row=0, column=0, sticky=E)
 
-        self.orphans = relationship_tools.list_orphans()
-        orphan_list = self.build_name_list(self.orphans)
+        orphans = relationship_tools.list_orphans()
+        self.orphan_list = self.build_name_list(orphans)
 
         self.child_list = ttk.Combobox(self.page)
-        self.child_list['values'] = orphan_list
+        self.child_list['values'] = [i[0] for i in self.orphan_list]
         self.child_list['width'] = 30
         self.child_list.grid(row=0,column=1,columnspan=4, sticky=W)
 
@@ -38,11 +38,11 @@ class ChildPage():
         mother_label['text'] = 'Mother'
         mother_label.grid(row=1, column=0, sticky=E)
 
-        self.females = relationship_tools.list_females()
-        female_list = self.build_name_list(self.females)
+        females = relationship_tools.list_females()
+        self.female_list = self.build_name_list(females)
 
         self.mother_list = ttk.Combobox(self.page)
-        self.mother_list['values'] = female_list
+        self.mother_list['values'] = [i[0] for i in self.female_list]
         self.mother_list['width'] = 30
         self.mother_list.grid(row=1,column=1,columnspan=4, sticky=W)
 
@@ -51,11 +51,11 @@ class ChildPage():
         father_label['text'] = 'Father'
         father_label.grid(row=2, column=0, sticky=E)
 
-        self.males = relationship_tools.list_males()
-        male_list = self.build_name_list(self.males)
+        males = relationship_tools.list_males()
+        self.male_list = self.build_name_list(males)
 
         self.father_list = ttk.Combobox(self.page)
-        self.father_list['values'] = male_list
+        self.father_list['values'] = [i[0] for i in self.male_list]
         self.father_list['width'] = 30
         self.father_list.grid(row=2,column=1,columnspan=4, sticky=W)
 
@@ -78,7 +78,8 @@ class ChildPage():
                 name = '{0} {1} {2}'.format(person['first'],person['middle'], person['last'])
             else:
                 name = '{0} {1}'.format(person['first'],person['last'])
-            people.append(name)
+            people.append([name,person['id']])
+        people.sort(key=lambda i: i[0])
         return people
 
     def clear_values(self):
@@ -87,9 +88,9 @@ class ChildPage():
         self.father_list.set('')
 
     def submit_values(self):
-        child_id = self.orphans[self.child_list.current()]['id']
-        mother_id = self.females[self.mother_list.current()]['id']
-        father_id = self.males[self.father_list.current()]['id']
+        child_id = self.orphan_list[self.child_list.current()][1]
+        mother_id = self.female_list[self.mother_list.current()][1]
+        father_id = self.male_list[self.father_list.current()][1]
 
         if child_id and mother_id:
             relationship_tools.add_child(child_id,mother_id)

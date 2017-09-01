@@ -1,6 +1,6 @@
 import Tkinter
 import ttk
-from pages import one, two
+from pages import one, two, three
 
 class App():
 
@@ -26,6 +26,11 @@ class App():
             width=self.page_width)
 
         two.ChildPage(
+            notebook=self.nb,
+            height=self.page_height,
+            width=self.page_width)
+
+        three.MarriagePage(
             notebook=self.nb,
             height=self.page_height,
             width=self.page_width)

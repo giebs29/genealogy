@@ -18,5 +18,5 @@ class Database():
             cur.execute(sql_str)
             return cur.fetchall()
 
-db_path = '/home/sam/Documents/MyRepos/genealogy/genealogy.sqlite'
+db_path = r"C:\Users\giebners\Documents\MyRepos\genealogy\genealogy.sqlite"
 db = Database(db_path)
